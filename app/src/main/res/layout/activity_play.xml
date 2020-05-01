@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activites.PlayActivity">
+
+    <!-- Custom ImageView With Ken Burns Effect -->
+
+    <com.hotix.myhotixplay.views.kbv.KenBurnsView
+        android:id="@+id/ken_burns_images"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/transparent_background">
+
+        <!-- Hotel -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_play_hotel_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="..."
+            android:textColor="@color/light_bg_dark_secondary_text"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <!-- Form -->
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_room_form"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/transparent_background"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <!-- Room Logo -->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_room_logo"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="8dp"
+            app:srcCompat="@drawable/svg_access_512" />
+
+        <!-- Room -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/il_play_room"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:hintTextAppearance="@style/MyHintTextStyle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_play_room"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/room"
+                android:inputType="number"
+                android:theme="@style/MyEditTextStyle" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Search Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_play_search"
+            style="@style/MyButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/search"
+            android:textSize="24sp" />
+
+        <!-- Search ProgressBar -->
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/pb_play_search"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_search"
+            android:layout_alignParentStart="true"
+            android:indeterminate="true"
+            android:theme="@style/MyProgressBarStyle"
+            android:visibility="gone" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_data_form"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/transparent_background"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="gone">
+
+        <!-- First Name -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/il_play_first_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:hintTextAppearance="@style/MyHintTextStyle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_play_first_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/first_name"
+                android:inputType="text"
+                android:theme="@style/MyEditTextStyle" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Last Name -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/il_play_last_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:hintTextAppearance="@style/MyHintTextStyle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_play_last_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/last_name"
+                android:inputType="text"
+                android:theme="@style/MyEditTextStyle" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- DOC -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/il_play_doc_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:hintTextAppearance="@style/MyHintTextStyle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_play_doc_num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/id_doc_num"
+                android:inputType="text"
+                android:theme="@style/MyEditTextStyle" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Mail -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/il_play_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:hintTextAppearance="@style/MyHintTextStyle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_play_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:inputType="text"
+                android:theme="@style/MyEditTextStyle" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Validate Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_play_validate_data"
+            style="@style/MyButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/validate"
+            android:textSize="24sp" />
+
+        <!-- Validate ProgressBar -->
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/pb_play_validate_data"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_search"
+            android:layout_alignParentStart="true"
+            android:indeterminate="true"
+            android:theme="@style/MyProgressBarStyle"
+            android:visibility="gone" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_loisir_form"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/transparent_background"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="gone">
+
+        <!-- Validate Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_next"
+            style="@style/MyButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="Validate"
+            android:textSize="24sp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_consomation_form"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/transparent_background"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="gone">
+
+
+
+        <!-- Validate Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_confirm"
+            style="@style/MyButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="Confirm"
+            android:textSize="24sp" />
+
+        <!-- Validate ProgressBar -->
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/pb_confirm"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_search"
+            android:layout_alignParentStart="true"
+            android:indeterminate="true"
+            android:theme="@style/MyProgressBarStyle"
+            android:visibility="gone" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <RelativeLayout
+        android:id="@+id/rl_play_game"
+        android:layout_width="360dp"
+        android:layout_height="360dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/transparent_background"
+        android:visibility="gone"
+        android:padding="6dp">
+
+        <RelativeLayout
+            android:id="@+id/rl_play_weel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@drawable/svg_ellipse_512" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_play_pointer"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_above="@id/btn_play_spin"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-10dp"
+            android:src="@drawable/svg_pointer_512"
+            android:tint="@color/black" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_play_spin"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            android:background="?android:selectableItemBackground"
+            android:scaleType="centerCrop"
+            android:src="@drawable/spin_button" />
+
+    </RelativeLayout>
+
+    <!-- Footer -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/transparent_background">
+
+        <!-- Version -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_play_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="0.0.0"
+            android:textColor="@color/light_bg_dark_secondary_text"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- Settings Button -->
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/ibtn_play_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="6dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="@color/colorPrimary"
+            app:srcCompat="@drawable/ic_settings_white_36dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

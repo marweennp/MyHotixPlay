@@ -1,9 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activites.SplashScreenActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Main Container -->
+    <RelativeLayout
+        android:id="@+id/rl_splash_main_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
+
+        <!-- Splash Screen Logo -->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_splash_logo"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            app:srcCompat="@drawable/hotix_logo" />
+
+        <!-- Splash Screen Progress View -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ll_splash_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_spalsh_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:gravity="center"
+                android:text="..."
+                android:textColor="@color/white_op_90"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <!-- Loading ProgressBar -->
+            <androidx.core.widget.ContentLoadingProgressBar
+                android:id="@+id/pb_spalsh_progress"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:theme="@style/MyProgressBarStyle" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </RelativeLayout>
+
+    <!-- Infos View -->
+    <include layout="@layout/include_infos_view" />
+
+</RelativeLayout>

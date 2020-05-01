@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_infos_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:visibility="gone">
+
+
+    <!-- Infos Container Layout (Img & Text) -->
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_infos_container_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <!-- Infos Icon -->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_infos_icon"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/svg_server_grey_512" />
+
+        <!-- Infos TextView -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_infos_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/server_error"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="24dp"
+            android:textColor="@color/grey_400"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <!-- Infos Refresh Button -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_infos_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:layout_below="@+id/ll_infos_container_layout"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:text="@string/refresh"
+        android:textColor="@color/colorPrimary" />
+
+</RelativeLayout>
