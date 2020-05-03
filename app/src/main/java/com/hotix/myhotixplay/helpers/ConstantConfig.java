@@ -27,6 +27,4 @@ public class ConstantConfig {
     public static RoomDetails GLOBAL_ROOM_DETAILS = new RoomDetails();
     public static Degree GLOBAL_DEGREE= new Degree();
     public static ArrayList<Prize> GLOBAL_PRIZES_LIST= new ArrayList<Prize>();
-    public static ArrayList<ItemPlay> GLOBAL_LOISIRS= new ArrayList<ItemPlay>();
-    public static ArrayList<ItemPlay> GLOBAL_CONSOMATIONS= new ArrayList<ItemPlay>();
 }

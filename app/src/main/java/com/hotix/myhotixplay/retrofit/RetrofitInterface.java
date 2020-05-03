@@ -50,6 +50,11 @@ public interface RetrofitInterface {
     Call<Success> updateClientQuery(@Header("Content-Type") String content_type,
                                     @Body RoomDetails data);
 
+    //Post Confirm Prize service call
+    @POST("/HNGAPI/v0/api/MyHotixPlay/ConfirmPrize")
+    Call<Success> confirmPrizeQuery(@Header("Content-Type") String content_type,
+                                    @Body RoomDetails data);
+
     /**
      * Ping Serveur*********************************************************************************
      **/

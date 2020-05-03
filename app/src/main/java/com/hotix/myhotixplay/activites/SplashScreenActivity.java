@@ -34,9 +34,6 @@ import retrofit2.Response;
 
 import static com.hotix.myhotixplay.helpers.ConnectionChecher.isNetworkAvailable;
 import static com.hotix.myhotixplay.helpers.ConstantConfig.FINAL_APP_ID;
-import static com.hotix.myhotixplay.helpers.ConstantConfig.GLOBAL_CONSOMATIONS;
-import static com.hotix.myhotixplay.helpers.ConstantConfig.GLOBAL_LOISIRS;
-import static com.hotix.myhotixplay.helpers.Utils.clearImageDiskCache;
 import static com.hotix.myhotixplay.helpers.Utils.setBaseUrl;
 import static com.hotix.myhotixplay.helpers.Utils.stringEmptyOrNull;
 
@@ -224,7 +221,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     mSettings.setSettingsUpdated(false);
                 }
 
-                GetPlayData();
+                startDelay();
             }
 
             @Override
@@ -232,47 +229,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                 llSplashProgress.setVisibility(View.GONE);
                 tvSplashProgress.setText("");
                 mSettings.setSettingsUpdated(false);
-                startDelay();
-            }
-        });
-    }
-
-    private void GetPlayData() {
-
-        llSplashProgress.setVisibility(View.VISIBLE);
-        tvSplashProgress.setText(R.string.loading_play_data);
-
-        RetrofitInterface service = RetrofitClient.getHotixSupportApi().create(RetrofitInterface.class);
-        Call<PlayData> userCall = service.getPlayDataQuery();
-
-        userCall.enqueue(new Callback<PlayData>() {
-            @Override
-            public void onResponse(Call<PlayData> call, Response<PlayData> response) {
-                llSplashProgress.setVisibility(View.GONE);
-                tvSplashProgress.setText("");
-
-                if (response.raw().code() == 200) {
-                    PlayData _PlayData = response.body();
-
-                    if (_PlayData.getSuccess()) {
-                        GLOBAL_LOISIRS = _PlayData.getLoisirs();
-                        GLOBAL_CONSOMATIONS = _PlayData.getConsomations();
-                    } else {
-                         GLOBAL_LOISIRS= new ArrayList<ItemPlay>();
-                         GLOBAL_CONSOMATIONS= new ArrayList<ItemPlay>();
-                    }
-
-                } else {
-                    GLOBAL_LOISIRS= new ArrayList<ItemPlay>();
-                    GLOBAL_CONSOMATIONS= new ArrayList<ItemPlay>();
-                }
-                startDelay();
-            }
-
-            @Override
-            public void onFailure(Call<PlayData> call, Throwable t) {
-                llSplashProgress.setVisibility(View.GONE);
-                tvSplashProgress.setText("");
                 startDelay();
             }
         });

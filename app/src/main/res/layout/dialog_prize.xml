@@ -57,4 +57,14 @@
             android:textColor="@color/colorPrimary" />
     </RelativeLayout>
 
+    <!-- ProgressBar -->
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/pb_dialog_prize"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:theme="@style/MyProgressBarStyle"
+        android:visibility="gone" />
+
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -3,6 +3,7 @@ package com.hotix.myhotixplay.activites;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -35,6 +37,7 @@ import com.hotix.myhotixplay.helpers.AppSettings;
 import com.hotix.myhotixplay.helpers.InputValidation;
 import com.hotix.myhotixplay.models.Degree;
 import com.hotix.myhotixplay.models.HotelSettings;
+import com.hotix.myhotixplay.models.ItemPlay;
 import com.hotix.myhotixplay.models.Prize;
 import com.hotix.myhotixplay.models.RoomDetails;
 import com.hotix.myhotixplay.models.Success;
@@ -61,7 +64,7 @@ import static com.hotix.myhotixplay.helpers.Utils.setBaseUrl;
 import static com.hotix.myhotixplay.helpers.Utils.showSnackbar;
 import static com.hotix.myhotixplay.helpers.Utils.stringEmptyOrNull;
 
-public class PlayActivity extends AppCompatActivity implements Animation.AnimationListener{
+public class PlayActivity extends AppCompatActivity implements Animation.AnimationListener {
 
     private int _STEP = 1;
     private static final String TAG = "PlayActivity";
@@ -69,6 +72,7 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
     private long mSpinDuration;
     private float mSpinRevolutions;
     private String prizeText = "";
+    private int prizeIndex = 0;
 
     // Views
     private LinearLayoutCompat llRoomForm;
@@ -86,8 +90,16 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
     private TextInputEditText etPlayDocNum;
     private TextInputLayout ilPlayEmail;
     private TextInputEditText etPlayEmail;
-    private AppCompatButton btnPlayValidateData;
-    private ContentLoadingProgressBar pbPlayValidateData;
+    private AppCompatButton btnPlayNextData;
+
+    private LinearLayoutCompat llLoisirForm;
+    private LinearLayoutCompat llLoisirContainer;
+    private AppCompatButton btnPlayNextLoisir;
+
+    private LinearLayoutCompat llConsomationForm;
+    private LinearLayoutCompat llConsomationContainer;
+    private AppCompatButton btnPlayValidateConsomation;
+    private ContentLoadingProgressBar pbPlayValidateConsomation;
 
     private RelativeLayout rlPlayGame;
     private RelativeLayout rlPlayWeel;
@@ -98,8 +110,11 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
     private AppCompatImageButton ibtnPlaySetting;
 
     // Dialog
+    private AlertDialog prizeDialog;
     private TextInputLayout ilHotelCode;
     private TextInputEditText etHotelCode;
+    private AppCompatButton btnPrizeOk;
+    private ContentLoadingProgressBar pbDialogProgress;
 
     //AppSettings
     private AppSettings mSettings;
@@ -123,7 +138,7 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
     protected void onResume() {
         super.onResume();
         if (mSettings.getFirstStart()) {
-            Log.e(TAG, "AppSettings FirstStart : " + mSettings.getFirstStart() );
+            Log.e(TAG, "AppSettings FirstStart : " + mSettings.getFirstStart());
             startDownloadSettingsDialog();
         }
         setBaseUrl(this);
@@ -132,17 +147,29 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
 
     @Override
     public void onBackPressed() {
-        if(_STEP == 1){
+        if (_STEP == 1) {
             startExitDialog();
         }
 
-        if(_STEP == 2){
+        if (_STEP == 2) {
             _STEP = 1;
             llRoomForm.setVisibility(View.VISIBLE);
             llDataForm.setVisibility(View.GONE);
         }
 
-        if(_STEP == 3){
+        if (_STEP == 3) {
+            _STEP = 2;
+            llDataForm.setVisibility(View.VISIBLE);
+            llLoisirForm.setVisibility(View.GONE);
+        }
+
+        if (_STEP == 4) {
+            _STEP = 3;
+            llLoisirForm.setVisibility(View.VISIBLE);
+            llConsomationForm.setVisibility(View.GONE);
+        }
+
+        if (_STEP == 5) {
             _STEP = 1;
             llRoomForm.setVisibility(View.VISIBLE);
             rlPlayGame.setVisibility(View.GONE);
@@ -171,8 +198,16 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
         etPlayDocNum = (TextInputEditText) findViewById(R.id.et_play_doc_num);
         ilPlayEmail = (TextInputLayout) findViewById(R.id.il_play_email);
         etPlayEmail = (TextInputEditText) findViewById(R.id.et_play_email);
-        btnPlayValidateData = (AppCompatButton) findViewById(R.id.btn_play_validate_data);
-        pbPlayValidateData = (ContentLoadingProgressBar) findViewById(R.id.pb_play_validate_data);
+        btnPlayNextData = (AppCompatButton) findViewById(R.id.btn_play_next_data);
+
+        llLoisirForm = (LinearLayoutCompat) findViewById(R.id.ll_loisir_form);
+        llLoisirContainer = (LinearLayoutCompat) findViewById(R.id.ll_loisir_container);
+        btnPlayNextLoisir = (AppCompatButton) findViewById(R.id.btn_play_next_loisir);
+
+        llConsomationForm = (LinearLayoutCompat) findViewById(R.id.ll_consomation_form);
+        llConsomationContainer = (LinearLayoutCompat) findViewById(R.id.ll_consomation_container);
+        btnPlayValidateConsomation = (AppCompatButton) findViewById(R.id.btn_play_validate_consomation);
+        pbPlayValidateConsomation = (ContentLoadingProgressBar) findViewById(R.id.pb_play_validate_consomation);
 
         rlPlayGame = (RelativeLayout) findViewById(R.id.rl_play_game);
         rlPlayWeel = (RelativeLayout) findViewById(R.id.rl_play_weel);
@@ -214,16 +249,39 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
             }
         });
 
-        btnPlayValidateData.setOnClickListener(new View.OnClickListener() {
+        btnPlayNextData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (inputTextValidationData()) {
+                    GLOBAL_ROOM_DETAILS.setFirstName(etPlayFirstName.getText().toString().trim());
+                    GLOBAL_ROOM_DETAILS.setLastName(etPlayLasttName.getText().toString().trim());
+                    GLOBAL_ROOM_DETAILS.setIdDocNumber(etPlayDocNum.getText().toString().trim());
+                    GLOBAL_ROOM_DETAILS.setEmail(etPlayEmail.getText().toString().trim());
+
+                    _STEP = 3;
+                    llDataForm.setVisibility(View.GONE);
+                    llLoisirForm.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        btnPlayNextLoisir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _STEP = 4;
+                llLoisirForm.setVisibility(View.GONE);
+                llConsomationForm.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btnPlayValidateConsomation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (checkNetwork(getApplicationContext())) {
-                    if (inputTextValidationData()) {
-                        try {
-                            updateClient();
-                        } catch (Exception e) {
-                            showSnackbar(findViewById(android.R.id.content), getString(R.string.error_message_check_settings));
-                        }
+                    try {
+                        updateClient();
+                    } catch (Exception e) {
+                        showSnackbar(findViewById(android.R.id.content), getString(R.string.error_message_check_settings));
                     }
                 } else {
                     showSnackbar(findViewById(android.R.id.content), getString(R.string.error_message_no_internet));
@@ -380,22 +438,20 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
         View mView = getLayoutInflater().inflate(R.layout.dialog_prize, null);
         AppCompatImageView imgPrizeIcon = (AppCompatImageView) mView.findViewById(R.id.img_dialog_prize_icon);
         AppCompatTextView tvPrize = (AppCompatTextView) mView.findViewById(R.id.tv_dialog_prize_text);
-        AppCompatButton btnok = (AppCompatButton) mView.findViewById(R.id.btn_dialog_prize_ok);
+        btnPrizeOk = (AppCompatButton) mView.findViewById(R.id.btn_dialog_prize_ok);
+        pbDialogProgress = (ContentLoadingProgressBar) mView.findViewById(R.id.pb_dialog_prize);
 
-        tvPrize.setText(prizeText);
+        tvPrize.setText(GLOBAL_PRIZES_LIST.get(prizeIndex).getPrizeMsg());
 
         mBuilder.setView(mView);
         mBuilder.setCancelable(false);
-        final AlertDialog dialog = mBuilder.create();
-        dialog.show();
+        prizeDialog = mBuilder.create();
+        prizeDialog.show();
 
-        btnok.setOnClickListener(new View.OnClickListener() {
+        btnPrizeOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                _STEP = 1;
-                llRoomForm.setVisibility(View.VISIBLE);
-                rlPlayGame.setVisibility(View.GONE);
-                dialog.dismiss();
+                ConfirmPrize();
             }
         });
 
@@ -431,14 +487,70 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
 
     }
 
+    /**********************************************************************************************/
+
+    public void addLoisirs() {
+        llLoisirContainer.removeAllViews();
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        int _INDEX = 0;
+        for (ItemPlay _ITEM : GLOBAL_ROOM_DETAILS.getLoisirs()) {
+
+            final View cbxView = inflater.inflate(R.layout.item_check_box_row, null);
+
+            AppCompatTextView tv = (AppCompatTextView) cbxView.findViewById(R.id.tv_check_box_title);
+            AppCompatCheckBox cbx = (AppCompatCheckBox) cbxView.findViewById(R.id.cbx_check_box);
+
+            tv.setText(_ITEM.getName());
+            cbx.setChecked(false);
+            cbx.setId(_INDEX);
+
+            cbx.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    GLOBAL_ROOM_DETAILS.getLoisirs().get(buttonView.getId()).setChecked(isChecked);
+                }
+            });
+
+            llLoisirContainer.addView(cbxView);
+            _INDEX++;
+        }
+    }
+
+    public void addConsomations() {
+        llConsomationContainer.removeAllViews();
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        int _INDEX = 0;
+        for (ItemPlay _ITEM : GLOBAL_ROOM_DETAILS.getConsomations()) {
+
+            final View cbxView = inflater.inflate(R.layout.item_check_box_row, null);
+
+            AppCompatTextView tv = (AppCompatTextView) cbxView.findViewById(R.id.tv_check_box_title);
+            AppCompatCheckBox cbx = (AppCompatCheckBox) cbxView.findViewById(R.id.cbx_check_box);
+
+            tv.setText(_ITEM.getName());
+            cbx.setChecked(false);
+            cbx.setId(_INDEX);
+
+            cbx.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    GLOBAL_ROOM_DETAILS.getConsomations().get(buttonView.getId()).setChecked(isChecked);
+                }
+            });
+
+            llConsomationContainer.addView(cbxView);
+            _INDEX++;
+        }
+    }
+
     /***(GAME)*************************************************************************************/
 
     public void addArcs() {
         rlPlayWeel.removeAllViews();
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        int deg = (GLOBAL_PRIZES_LIST.size()>8)? 15 : 22;
-        for (Prize _PRIZE: GLOBAL_PRIZES_LIST) {
-            final View arcView = inflater.inflate((GLOBAL_PRIZES_LIST.size()>8)? R.layout.item_arc_30 : R.layout.item_arc_45, null);
+        int deg = (GLOBAL_PRIZES_LIST.size() > 8) ? 15 : 22;
+        for (Prize _PRIZE : GLOBAL_PRIZES_LIST) {
+            final View arcView = inflater.inflate((GLOBAL_PRIZES_LIST.size() > 8) ? R.layout.item_arc_30 : R.layout.item_arc_45, null);
             arcView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
 
             AppCompatImageView imgArc = (AppCompatImageView) arcView.findViewById(R.id.img_arc_color);
@@ -459,7 +571,7 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
             tvPrize.setText(_PRIZE.getPrizeValue());
 
             arcView.setRotation(deg);
-            deg += (GLOBAL_PRIZES_LIST.size()>8)? 30 : 45;
+            deg += (GLOBAL_PRIZES_LIST.size() > 8) ? 30 : 45;
             rlPlayWeel.addView(arcView);
         }
     }
@@ -472,7 +584,7 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
         int numOfPrizes = GLOBAL_PRIZES_LIST.size();// quantity of prizes
         int degreesPerPrize = 360 / numOfPrizes;// size of sector per prize in degrees
         int shift = 0; //shit where the arrow points
-        int prizeIndex = ((shift + GLOBAL_DEGREE.getDegree()) / degreesPerPrize) % numOfPrizes;
+        prizeIndex = ((shift + GLOBAL_DEGREE.getDegree()) / degreesPerPrize) % numOfPrizes;
         prizeText = "Prize is: " + GLOBAL_PRIZES_LIST.get(prizeIndex).getPrizeValue();
 
         RotateAnimation rotateAnim = new RotateAnimation(0f, mSpinRevolutions - GLOBAL_DEGREE.getDegree(), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -519,7 +631,7 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
         userCall.enqueue(new Callback<HotelSettings>() {
             @Override
             public void onResponse(Call<HotelSettings> call, Response<HotelSettings> response) {
-                Log.e(TAG, "Response : " + response.raw().code() );
+                Log.e(TAG, "Response : " + response.raw().code());
                 progressDialog.dismiss();
 
                 if (response.raw().code() == 200) {
@@ -569,7 +681,7 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
                         mSettings.setConfigured(true);
                         mSettings.setSettingsUpdated(true);
 
-                        Log.e(TAG, "MySettings FirstStart : " + mSettings.getFirstStart() );
+                        Log.e(TAG, "MySettings FirstStart : " + mSettings.getFirstStart());
 
                         showSnackbar(findViewById(android.R.id.content), getString(R.string.message_settings_updated));
                         setBaseUrl(getApplicationContext());
@@ -583,7 +695,7 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
 
             @Override
             public void onFailure(Call<HotelSettings> call, Throwable t) {
-                Log.e(TAG, "Failure : " + t.toString() );
+                Log.e(TAG, "Failure : " + t.toString());
                 progressDialog.dismiss();
                 startDownloadSettingsDialog();
                 showSnackbar(findViewById(android.R.id.content), getString(R.string.error_message_server_down));
@@ -621,12 +733,14 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
                         etPlayLasttName.setText(GLOBAL_ROOM_DETAILS.getLastName());
                         etPlayDocNum.setText(GLOBAL_ROOM_DETAILS.getIdDocNumber());
                         etPlayEmail.setText(GLOBAL_ROOM_DETAILS.getEmail());
+                        addLoisirs();
+                        addConsomations();
                     } else {
                         showSnackbar(findViewById(android.R.id.content), "Room Do Not Exist!!!");
                     }
 
                 } else {
-                    showSnackbar(findViewById(android.R.id.content), response.raw().code()+" : "+response.message());
+                    showSnackbar(findViewById(android.R.id.content), response.raw().code() + " : " + response.message());
                 }
             }
 
@@ -639,53 +753,10 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
         });
     }
 
-    public void updateClient() {
-
-        btnPlayValidateData.setEnabled(false);
-        pbPlayValidateData.setVisibility(View.VISIBLE);
-
-        final String content_type = "application/json";
-        GLOBAL_ROOM_DETAILS.setFirstName(etPlayFirstName.getText().toString().trim());
-        GLOBAL_ROOM_DETAILS.setLastName(etPlayLasttName.getText().toString().trim());
-        GLOBAL_ROOM_DETAILS.setIdDocNumber(etPlayDocNum.getText().toString().trim());
-        GLOBAL_ROOM_DETAILS.setEmail(etPlayEmail.getText().toString().trim());
-
-        RetrofitInterface service = RetrofitClient.getClientHngApi().create(RetrofitInterface.class);
-        Call<Success> userCall = service.updateClientQuery(content_type, GLOBAL_ROOM_DETAILS);
-
-        userCall.enqueue(new Callback<Success>() {
-            @Override
-            public void onResponse(Call<Success> call, Response<Success> response) {
-
-                btnPlayValidateData.setEnabled(true);
-                pbPlayValidateData.setVisibility(View.GONE);
-
-                if (response.raw().code() == 200) {
-                    Success success = response.body();
-                    if (success.getSuccess()) {
-                        loadAllPrizes();
-                    } else {
-                        showSnackbar(findViewById(android.R.id.content), success.getMessage());
-                    }
-                } else {
-                    showSnackbar(findViewById(android.R.id.content), response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Success> call, Throwable t) {
-                btnPlayValidateData.setEnabled(true);
-                pbPlayValidateData.setVisibility(View.GONE);
-                showSnackbar(findViewById(android.R.id.content), "error_message_server_unreachable");
-            }
-        });
-
-    }
-
     private void loadAllPrizes() {
 
-        btnPlayValidateData.setEnabled(false);
-        pbPlayValidateData.setVisibility(View.VISIBLE);
+        btnPlayValidateConsomation.setEnabled(false);
+        pbPlayValidateConsomation.setVisibility(View.VISIBLE);
 
         RetrofitInterface service = RetrofitClient.getClientHngApi().create(RetrofitInterface.class);
         Call<ArrayList<Prize>> userCall = service.getPrizesListQuery();
@@ -694,8 +765,8 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
             @Override
             public void onResponse(Call<ArrayList<Prize>> call, Response<ArrayList<Prize>> response) {
 
-                btnPlayValidateData.setEnabled(true);
-                pbPlayValidateData.setVisibility(View.GONE);
+                btnPlayValidateConsomation.setEnabled(true);
+                pbPlayValidateConsomation.setVisibility(View.GONE);
 
                 if (response.raw().code() == 200) {
 
@@ -718,8 +789,8 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
 
             @Override
             public void onFailure(Call<ArrayList<Prize>> call, Throwable t) {
-                btnPlayValidateData.setEnabled(true);
-                pbPlayValidateData.setVisibility(View.GONE);
+                btnPlayValidateConsomation.setEnabled(true);
+                pbPlayValidateConsomation.setVisibility(View.GONE);
                 showSnackbar(findViewById(android.R.id.content), "error_message_server_unreachable");
             }
         });
@@ -727,8 +798,8 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
 
     private void loadRandomDegree() {
 
-        btnPlayValidateData.setEnabled(false);
-        btnPlayValidateData.setVisibility(View.VISIBLE);
+        btnPlayValidateConsomation.setEnabled(false);
+        pbPlayValidateConsomation.setVisibility(View.VISIBLE);
 
         RetrofitInterface service = RetrofitClient.getClientHngApi().create(RetrofitInterface.class);
         Call<Degree> userCall = service.getRandomDegreeQuery();
@@ -737,16 +808,16 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
             @Override
             public void onResponse(Call<Degree> call, Response<Degree> response) {
 
-                btnPlayValidateData.setEnabled(true);
-                btnPlayValidateData.setVisibility(View.GONE);
+                btnPlayValidateConsomation.setEnabled(true);
+                pbPlayValidateConsomation.setVisibility(View.GONE);
 
                 if (response.raw().code() == 200) {
 
                     Degree mDegree = response.body();
                     GLOBAL_DEGREE = mDegree;
 
-                    _STEP = 3;
-                    llDataForm.setVisibility(View.GONE);
+                    _STEP = 5;
+                    llConsomationForm.setVisibility(View.GONE);
                     rlPlayGame.setVisibility(View.VISIBLE);
                     addArcs();
 
@@ -757,11 +828,95 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
 
             @Override
             public void onFailure(Call<Degree> call, Throwable t) {
-                btnPlayValidateData.setEnabled(true);
-                btnPlayValidateData.setVisibility(View.GONE);
+                btnPlayValidateConsomation.setEnabled(true);
+                pbPlayValidateConsomation.setVisibility(View.GONE);
                 showSnackbar(findViewById(android.R.id.content), "error_message_server_unreachable");
             }
         });
+    }
+
+    public void updateClient() {
+
+        btnPlayValidateConsomation.setEnabled(false);
+        pbPlayValidateConsomation.setVisibility(View.VISIBLE);
+
+        final String content_type = "application/json";
+
+        RetrofitInterface service = RetrofitClient.getClientHngApi().create(RetrofitInterface.class);
+        Call<Success> userCall = service.updateClientQuery(content_type, GLOBAL_ROOM_DETAILS);
+
+        userCall.enqueue(new Callback<Success>() {
+            @Override
+            public void onResponse(Call<Success> call, Response<Success> response) {
+
+                btnPlayValidateConsomation.setEnabled(true);
+                pbPlayValidateConsomation.setVisibility(View.GONE);
+
+                if (response.raw().code() == 200) {
+                    Success success = response.body();
+                    if (success.getSuccess()) {
+                        loadAllPrizes();
+                    } else {
+                        showSnackbar(findViewById(android.R.id.content), success.getMessage());
+                    }
+                } else {
+                    showSnackbar(findViewById(android.R.id.content), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Success> call, Throwable t) {
+                btnPlayValidateConsomation.setEnabled(true);
+                pbPlayValidateConsomation.setVisibility(View.GONE);
+                showSnackbar(findViewById(android.R.id.content), "error_message_server_unreachable");
+            }
+        });
+
+    }
+
+    public void ConfirmPrize() {
+
+        btnPrizeOk.setEnabled(false);
+        pbDialogProgress.setVisibility(View.VISIBLE);
+
+        final String content_type = "application/json";
+
+        RetrofitInterface service = RetrofitClient.getClientHngApi().create(RetrofitInterface.class);
+        Call<Success> userCall = service.confirmPrizeQuery(content_type, GLOBAL_ROOM_DETAILS);
+
+        userCall.enqueue(new Callback<Success>() {
+            @Override
+            public void onResponse(Call<Success> call, Response<Success> response) {
+
+                btnPrizeOk.setEnabled(true);
+                pbDialogProgress.setVisibility(View.GONE);
+
+                if (response.raw().code() == 200) {
+                    Success success = response.body();
+                    if (success.getSuccess()) {
+
+                        _STEP = 1;
+                        etPlayRoom.setText("");
+                        llRoomForm.setVisibility(View.VISIBLE);
+                        rlPlayGame.setVisibility(View.GONE);
+                        prizeDialog.dismiss();
+
+                    } else {
+                        showSnackbar(findViewById(android.R.id.content), success.getMessage());
+                    }
+                } else {
+                    showSnackbar(findViewById(android.R.id.content), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Success> call, Throwable t) {
+                btnPrizeOk.setEnabled(true);
+                pbDialogProgress.setVisibility(View.GONE);
+                showSnackbar(findViewById(android.R.id.content), "error_message_server_unreachable");
+            }
+        });
+
     }
 
 

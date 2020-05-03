@@ -34,7 +34,7 @@
 
     </RelativeLayout>
 
-    <!-- Form -->
+    <!-- Room -->
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_room_form"
         android:layout_width="300dp"
@@ -98,6 +98,7 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <!-- Form -->
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_data_form"
         android:layout_width="300dp"
@@ -182,7 +183,111 @@
 
         <!-- Validate Button -->
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_play_validate_data"
+            android:id="@+id/btn_play_next_data"
+            style="@style/MyButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/next"
+            android:textSize="24sp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <!-- Loisirs -->
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_loisir_form"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/transparent_background"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="gone">
+
+        <!-- Title -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/loisirs"
+            android:textColor="@color/light_bg_dark_secondary_text"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ll_loisir_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- Validate Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_play_next_loisir"
+            style="@style/MyButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/next"
+            android:textSize="24sp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <!-- Consomations -->
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_consomation_form"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/transparent_background"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="gone">
+
+        <!-- Title -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/consomations"
+            android:textColor="@color/light_bg_dark_secondary_text"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ll_consomation_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- Validate Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_play_validate_consomation"
             style="@style/MyButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -194,7 +299,7 @@
 
         <!-- Validate ProgressBar -->
         <androidx.core.widget.ContentLoadingProgressBar
-            android:id="@+id/pb_play_validate_data"
+            android:id="@+id/pb_play_validate_consomation"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -206,68 +311,7 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/ll_loisir_form"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/transparent_background"
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:visibility="gone">
-
-        <!-- Validate Button -->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_next"
-            style="@style/MyButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:text="Validate"
-            android:textSize="24sp" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/ll_consomation_form"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/transparent_background"
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:visibility="gone">
-
-
-
-        <!-- Validate Button -->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_confirm"
-            style="@style/MyButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:text="Confirm"
-            android:textSize="24sp" />
-
-        <!-- Validate ProgressBar -->
-        <androidx.core.widget.ContentLoadingProgressBar
-            android:id="@+id/pb_confirm"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/btn_search"
-            android:layout_alignParentStart="true"
-            android:indeterminate="true"
-            android:theme="@style/MyProgressBarStyle"
-            android:visibility="gone" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
+    <!-- Game -->
     <RelativeLayout
         android:id="@+id/rl_play_game"
         android:layout_width="360dp"

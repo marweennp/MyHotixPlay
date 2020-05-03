@@ -13,6 +13,10 @@ public class ItemPlay {
     @Expose
     private String name;
 
+    @SerializedName("Checked")
+    @Expose
+    private Boolean checked;
+
     public Integer getId() {
         return id;
     }
@@ -25,5 +29,12 @@ public class ItemPlay {
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
     }
 }
