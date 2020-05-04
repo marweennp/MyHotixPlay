@@ -880,6 +880,7 @@ public class PlayActivity extends AppCompatActivity implements Animation.Animati
         pbDialogProgress.setVisibility(View.VISIBLE);
 
         final String content_type = "application/json";
+        GLOBAL_ROOM_DETAILS.setPrize(GLOBAL_PRIZES_LIST.get(prizeIndex));
 
         RetrofitInterface service = RetrofitClient.getClientHngApi().create(RetrofitInterface.class);
         Call<Success> userCall = service.confirmPrizeQuery(content_type, GLOBAL_ROOM_DETAILS);

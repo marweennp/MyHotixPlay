@@ -79,6 +79,10 @@ public class RoomDetails {
     @Expose
     private ArrayList<ItemPlay> consomations = null;
 
+    @SerializedName("Prize")
+    @Expose
+    private Prize prize = null;
+
 
     public String getRoom() {
         return room;
@@ -201,5 +205,10 @@ public class RoomDetails {
         return consomations;
     }
     public void setConsomations(ArrayList<ItemPlay> consomations) { this.consomations = consomations; }
+
+    public Prize getPrize() {
+        return prize;
+    }
+    public void setPrize(Prize prize) { this.prize = prize; }
 
 }
