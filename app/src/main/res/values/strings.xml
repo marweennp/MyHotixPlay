@@ -4,9 +4,9 @@
     <string name="refresh">refresh</string>
     <string name="no_internet">No Internet Connection!</string>
     <string name="unreachable_server">The server is unreachable!</string>
-    <string name="checking_internet_providers">Checking internet providers...</string>
+    <string name="checking_internet_providers">Checking internet providers…</string>
     <string name="check_internet_connection">Please check your internet connection</string>
-    <string name="loading_hotel_settings">Loading Hotel settings...</string>
+    <string name="loading_hotel_settings">Loading Hotel settings…</string>
     <string name="room">Room</string>
     <string name="search">Search</string>
     <string name="first_name">First Name</string>
